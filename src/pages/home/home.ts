@@ -56,6 +56,7 @@ export class HomePage {
     this.bluetoothSerial.connect(address).subscribe(success => {
       this.deviceConnected();
       this.showToast("Successfully Connected");
+      this.navigateToControlPage();
     }, error => {
       this.showError("Error:Connecting to Device");
     });
@@ -81,15 +82,19 @@ export class HomePage {
     this.showToast(data);
   }
 
-  sendData() {
-    this.dataSend += '\n';
-    this.showToast(this.dataSend);
+  // sendData() {
+  //   this.dataSend += '\n';
+  //   this.showToast(this.dataSend);
 
-    this.bluetoothSerial.write(this.dataSend).then(success => {
-      this.showToast(success);
-    }, error => {
-      this.showError(error)
-    });
+  //   this.bluetoothSerial.write(this.dataSend).then(success => {
+  //     this.showToast(success);
+  //   }, error => {
+  //     this.showError(error)
+  //   });
+  // }
+
+  navigateToControlPage(){
+    this.navCtrl.push('page-controlpage');
   }
 
   showError(error) {
