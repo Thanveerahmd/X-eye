@@ -82,16 +82,7 @@ export class HomePage {
     this.showToast(data);
   }
 
-  // sendData() {
-  //   this.dataSend += '\n';
-  //   this.showToast(this.dataSend);
-
-  //   this.bluetoothSerial.write(this.dataSend).then(success => {
-  //     this.showToast(success);
-  //   }, error => {
-  //     this.showError(error)
-  //   });
-  // }
+  
 
   navigateToControlPage(){
     this.navCtrl.push('page-controlpage');

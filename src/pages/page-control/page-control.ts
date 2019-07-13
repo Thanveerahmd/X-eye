@@ -10,37 +10,48 @@ import { AlertController, ToastController } from "ionic-angular";
   templateUrl: 'page-control.html',
 })
 export class PageControlPage {
+  res: any;
 
-  constructor(public navCtrl: NavController, 
+  constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private bluetoothSerial: BluetoothSerial,
     private toastCtrl: ToastController,
-    private alertCtrl: AlertController,) {
+    private alertCtrl: AlertController) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad PageControlPage');
   }
-  
 
-  sendData() { 
+  navigateToHomePage() {
+    this.navCtrl.push('homepage');
+  }
+
+  sendData() {
     this.bluetoothSerial.write('1').then(success => {
       this.showToast(success);
+      this.distace();
     }, error => {
       this.showError(error)
     });
   }
 
-  Reset(){
+  Reset() {
     this.bluetoothSerial.write('2').then(success => {
       this.showToast(success);
+      this.distace();
     }, error => {
       this.showError(error)
     });
   }
 
-  distace(){
-    this.bluetoothSerial.read().then(res =>{});
+  distace() {
+    this.bluetoothSerial.read().then(res => {
+      this.res = res;
+    },
+      error => {
+        this.showError(error)
+      });
   }
 
   showError(error) {
@@ -59,5 +70,12 @@ export class PageControlPage {
     });
     toast.present();
 
+  }
+
+  deviceDisconnected() {
+    // Unsubscribe from data receiving
+    this.bluetoothSerial.disconnect();
+    this.showToast("Device Disconnected");
+    this.navigateToHomePage();
   }
 }
