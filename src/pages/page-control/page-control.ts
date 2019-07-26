@@ -24,7 +24,7 @@ export class PageControlPage {
   }
 
   navigateToHomePage() {
-    this.navCtrl.push('homepage');
+    this.navCtrl.pop();
   }
 
   sendData() {

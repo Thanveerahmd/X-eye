@@ -85,7 +85,7 @@ export class HomePage {
   
 
   navigateToControlPage(){
-    this.navCtrl.push('page-controlpage');
+    this.navCtrl.push('PageControlPage');
   }
 
   showError(error) {
