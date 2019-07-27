@@ -21,6 +21,10 @@ export class HomePage {
     this.checkBluetoothEnabled();
   }
 
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad PageControlPage');
+  }
+
   checkBluetoothEnabled() {
     this.bluetoothSerial.isEnabled().then(success => {
       this.listPairedDevices();
@@ -85,7 +89,7 @@ export class HomePage {
   
 
   navigateToControlPage(){
-    this.navCtrl.push('page-controlpage');
+    this.navCtrl.push('PageControlPage');
   }
 
   showError(error) {

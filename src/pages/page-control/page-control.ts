@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { BluetoothSerial } from "@ionic-native/bluetooth-serial";
 import { AlertController, ToastController } from "ionic-angular";
+import { TextEncoder, TextDecoder } from 'text-encoding';
 
 
 @IonicPage()
@@ -11,12 +12,17 @@ import { AlertController, ToastController } from "ionic-angular";
 })
 export class PageControlPage {
   res: any;
+  data: any;
+  subs: any;
+
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private bluetoothSerial: BluetoothSerial,
     private toastCtrl: ToastController,
-    private alertCtrl: AlertController) {
+    private alertCtrl: AlertController,
+    private refDetector: ChangeDetectorRef) {
+    this.readData();
   }
 
   ionViewDidLoad() {
@@ -24,13 +30,14 @@ export class PageControlPage {
   }
 
   navigateToHomePage() {
-    this.navCtrl.push('homepage');
+    this.navCtrl.pop();
   }
 
   sendData() {
     this.bluetoothSerial.write('1').then(success => {
       this.showToast(success);
-      this.distace();
+      // this.distace();
+      // this.readData();
     }, error => {
       this.showError(error)
     });
@@ -39,7 +46,8 @@ export class PageControlPage {
   Reset() {
     this.bluetoothSerial.write('2').then(success => {
       this.showToast(success);
-      this.distace();
+      // this.distace();
+      // this.readData();
     }, error => {
       this.showError(error)
     });
@@ -78,4 +86,44 @@ export class PageControlPage {
     this.showToast("Device Disconnected");
     this.navigateToHomePage();
   }
+
+  readData() {
+    this.subs = this.bluetoothSerial.subscribeRawData().subscribe(
+      res => {
+        
+        // this.data = res;
+        // this.readSuccess(res);
+        var arr = new Uint8Array(res);
+        var data:string = this.Decodeuint8arr(arr); 
+        console.log(this.Decodeuint8arr(arr));
+        let num;
+        if(data != " "){
+          num = parseInt(data);
+          this.data = num;
+        }
+        this.refDetector.detectChanges();
+      },
+      error => console.log(error)
+    );
+  }
+
+  readSuccess(data) {
+    var arr = new Uint8Array(data);
+    var msg = '';
+    for (var i = 0; i < arr.length; i++) {
+      msg += arr[i] + ', ';
+    }
+    console.log('Received ' + arr + ' with vals ' + msg + 'and length ' + arr.length);
+  }
+
+  ionViewWillUnload() {
+    if (this.subs)
+      this.subs.unsubscribe();
+  }
+
+  Decodeuint8arr(uint8array){
+    return new TextDecoder("utf-8").decode(uint8array);
+}
+
+
 }
